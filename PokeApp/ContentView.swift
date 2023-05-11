@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    let pokemons: [Pokemon] = Pokemon.loadData() ?? []
+    let pokemons: [Pokemon] = Pokemon.loadData()
     let columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible())

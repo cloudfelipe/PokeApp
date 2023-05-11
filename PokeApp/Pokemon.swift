@@ -118,15 +118,26 @@ final class Pokemon: Decodable, Identifiable {
     }
     
     static func sample() -> Pokemon {
-        if let pkm = Pokemon.loadData()?.first {
+        if let pkm = Pokemon.loadData().first {
             return pkm
         }
         fatalError()
     }
 }
 
+extension Pokemon: Hashable {
+    
+    static func == (lhs: Pokemon, rhs: Pokemon) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
 extension Pokemon {
-    static func loadData() -> [Pokemon]? {
+    static func loadData() -> [Pokemon] {
         if let path = Bundle(for: Pokemon.self).path(forResource: "PokemonList", ofType: "json") {
             do {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
@@ -138,6 +149,6 @@ extension Pokemon {
             }
         }
         assertionFailure("Invalid Path for Pokemon List File'")
-        return nil
+        return []
     }
 }

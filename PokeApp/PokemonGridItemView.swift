@@ -64,11 +64,14 @@ struct PokemonGridItemView: View {
                     .foregroundColor(.white.opacity(0.2))
                     .frame(width: m.size.width * 0.5, height: m.size.width * 0.5)
                     .overlay {
-                        CachedAsyncImage(url: URL(string: pokemon.imageUrl)!)
-                            .aspectRatio(contentMode: .fit)
-                            .matchedGeometryEffect(id: "pkmAsset \(pokemon.id)", in: namespace)
-                            .frame(width: m.size.width * 0.5, height: m.size.width * 0.5)
-                            .offset(y: 2)
+                        CachedAsyncImage(url: URL(string: pokemon.imageUrl)!) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                        .matchedGeometryEffect(id: "pkmAsset \(pokemon.id)", in: namespace)
+                        .frame(width: m.size.width * 0.5, height: m.size.width * 0.5)
+                        .offset(y: 2)
                     }
             }
             .background(

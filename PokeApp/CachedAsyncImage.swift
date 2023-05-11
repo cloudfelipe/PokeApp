@@ -22,15 +22,21 @@ private final class ImageCache {
     }
 }
 
-struct CachedAsyncImage: View {
+struct CachedAsyncImage<Content: View>: View {
     @State private var image: UIImage?
+   
     let url: URL
+    let content: (Image) -> Content
+    
+    init(url: URL, @ViewBuilder content: @escaping (Image) -> Content) {
+        self.url = url
+        self.content = content
+    }
     
     var body: some View {
         Group {
             if image != nil {
-                Image(uiImage: image!)
-                    .resizable()
+                content(Image(uiImage: image!))
             } else {
                 ProgressView()
             }
@@ -60,6 +66,10 @@ struct CachedAsyncImage: View {
 
 struct CachedAsyncImage_Previews: PreviewProvider {
     static var previews: some View {
-        CachedAsyncImage(url: URL(string: "https://example.com/image.jpg")!)
+        CachedAsyncImage(url: URL(string: Pokemon.sample().imageUrl)!) { image in
+            return image
+                .resizable()
+                .frame(width: 300, height: 300)
+        }
     }
 }

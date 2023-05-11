@@ -10,9 +10,9 @@ import SwiftUI
 struct PokemonDetailView: View {
     
     var namespace: Namespace.ID
-    @Binding var isShown: Bool
     
-    let pokemon: Pokemon
+    @Binding var isShown: Bool
+    @State var pokemon: Pokemon
     
     var body: some View {
         GeometryReader { m in
@@ -24,10 +24,7 @@ struct PokemonDetailView: View {
                     
                     HStack {
                         Button {
-//                            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-//                                isShown.toggle()
-//                            }
-                            withAnimation(.easeInOut) {
+                            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                                 isShown.toggle()
                             }
                         } label: {
@@ -126,7 +123,10 @@ struct PokemonDetailView: View {
     @State private var animatePokeball = false
     
     func overlayImage(proxy: GeometryProxy) -> some View {
-        ZStack {
+        
+        let offsetY = -((proxy.size.height * 0.30) / 2 )
+        
+        return ZStack {
             Image("pokeball")
                 .resizable()
                 .foregroundColor(.white.opacity(0.2))
@@ -136,36 +136,15 @@ struct PokemonDetailView: View {
                            value: pokeballRotationAngle)
                 .onAppear {
                     pokeballRotationAngle = 360
-//                    animatePokeball.toggle()
                 }
-                .offset(y: -((proxy.size.height * 0.30) / 2 ) )
+                .offset(y: offsetY )
             
-            Image("bulbasaur")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 180, height: 180)
-                .offset(y: -((proxy.size.height * 0.30) / 2 ) )
+            PokemonScrollableView(itemSize: .init(width: 180, height: 180),
+                                  itemPadding: 20,
+                                  selectedPokemon: $pokemon)
+                .frame(height: 180)
+                .offset(y: offsetY )
         }
-    }
-    
-    var imageTab: some View {
-        TabView {
-            ForEach(/*@START_MENU_TOKEN@*/0 ..< 5/*@END_MENU_TOKEN@*/) { item in
-                GeometryReader { m in
-                    Image("bulbasaur")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 150, height: 150)
-                        .offset(y: -((m.size.height * 0.37) / 2 ) )
-                        .rotation3DEffect(
-                            .degrees(m.frame(in: .global).minX / -10),
-                            axis: (x: 0, y: 1, z: 0))
-                        .padding()
-                }
-            }
-        }
-        .frame(height: 200.0)
-        .tabViewStyle(.page(indexDisplayMode: .never))
     }
 }
 
