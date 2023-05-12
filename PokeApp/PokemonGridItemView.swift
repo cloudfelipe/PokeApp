@@ -21,8 +21,7 @@ struct PokemonGridItemView: View {
                         Spacer()
                         Text(pokemon.id)
                             .foregroundColor(Color.black.opacity(0.2))
-                            .font(.title3.weight(.semibold))
-                            .fontDesign(.rounded)
+                            .customFont(.title3)
                             .matchedGeometryEffect(id: "pkmNumber \(pokemon.id)", in: namespace, isSource: false)
                     }
                     
@@ -30,7 +29,7 @@ struct PokemonGridItemView: View {
                         VStack(alignment: .leading) {
                             
                             Text(pokemon.name)
-                                .font(.title2.weight(.bold))
+                                .customFont(.title3)
                                 .foregroundColor(Color.white)
                                 .fontDesign(.rounded)
                                 .matchedGeometryEffect(id: "pkmName \(pokemon.id)", in: namespace, isSource: false)
@@ -40,7 +39,7 @@ struct PokemonGridItemView: View {
                                 ForEach(pokemon.typeOfPokemon.suffix(2), id: \.self) { type in
                                     Text(type.name)
                                         .fontWeight(.medium)
-                                        .font(.caption)
+                                        .customFont(.caption)
                                         .foregroundColor(.white)
                                         .padding(.horizontal, 10.0)
                                         .padding(.vertical, 3.0)

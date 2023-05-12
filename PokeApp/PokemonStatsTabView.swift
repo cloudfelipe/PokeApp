@@ -56,7 +56,7 @@ struct PokemonStatsTabView: View {
                 }
             } label: {
                 Text(tabItem.title)
-                    .font(.subheadline.weight(.semibold))
+                    .customFont(.subheadline2)
                     .foregroundColor(.black)
                     .opacity(selectedTab == tabItem ? 1 : 0.5)
                     .background(

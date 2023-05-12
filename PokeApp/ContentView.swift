@@ -61,7 +61,7 @@ struct ContentView: View {
                 .overlay {
                     HStack {
                         Text("Pokedex")
-                            .font(.largeTitle.bold())
+                            .customFont(.largeTitle)
                         Spacer()
                     }
                     .padding(16.0)

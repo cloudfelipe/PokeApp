@@ -21,8 +21,7 @@ struct PokemonTypeTagView: View {
 //                .font(.caption)
 //        }
         Text(pokemonType.name)
-            .fontWeight(.medium)
-            .font(.caption)
+            .customFont(.caption)
             .foregroundColor(.white)
             .padding(.horizontal, 10.0)
             .padding(.vertical, 2.0)

@@ -47,14 +47,12 @@ struct PokemonDetailView: View {
                     
                     HStack {
                         Text(pokemon.name)
-                            .font(.largeTitle.weight(.bold))
-                            .fontDesign(.rounded)
+                            .customFont(.largeTitle)
                             .foregroundColor(.white)
                             .matchedGeometryEffect(id: "pkmName \(pokemon.id)", in: namespace)
                         Spacer()
                         Text(pokemon.id)
-                            .font(.title2.weight(.semibold))
-                            .fontDesign(.rounded)
+                            .customFont(.title2)
                             .foregroundColor(.white)
                             .matchedGeometryEffect(id: "pkmNumber \(pokemon.id)", in: namespace)
                     }
@@ -62,8 +60,7 @@ struct PokemonDetailView: View {
                     HStack {
                         ForEach(pokemon.typeOfPokemon.suffix(2), id: \.self) { type in
                             Text(type.name)
-                                .fontWeight(.medium)
-                                .font(.caption)
+                                .customFont(.caption)
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 15.0)
                                 .padding(.vertical, 5.0)
@@ -77,7 +74,7 @@ struct PokemonDetailView: View {
                         Spacer()
                         
                         Text("\(pokemon.category) Pokemon")
-                            .fontWeight(.medium)
+                            .customFont(.body)
                             .foregroundColor(.white)
                             .layoutPriority(1)
                     }
