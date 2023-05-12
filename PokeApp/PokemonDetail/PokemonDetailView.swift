@@ -14,6 +14,8 @@ struct PokemonDetailView: View {
     @Binding var isShown: Bool
     @State var pokemon: Pokemon
     
+    @State var selectedTab: PokemonDetailTab = .about
+    
     var body: some View {
         GeometryReader { m in
             ZStack {
@@ -86,10 +88,23 @@ struct PokemonDetailView: View {
                 
                 ZStack {
                     VStack {
-                        PokemonStatsTabView()
+                        PokemonStatsTabView(selectedTab: $selectedTab)
                             .padding(.top, 25.0)
-                        PokemonAboutView(pokemon: pokemon)
-                            .frame(height: m.size.height * 0.57)
+                        Group {
+                            switch selectedTab {
+                            case .about:
+                                PokemonAboutView(pokemon: pokemon)
+                            case .baseStats:
+                                Rectangle()
+                                    .fill(.white)
+                            case .evolution:
+                                PokemonEvolutionView(pokemon: pokemon)
+                            case .moves:
+                                Rectangle()
+                                    .fill(.white)
+                            }
+                        }
+                        .frame(height: m.size.height * 0.57)
                     }
                     .background(Color.white)
                     .mask {

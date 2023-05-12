@@ -11,9 +11,10 @@ import SwiftUI
 struct PokeAppApp: App {
     var body: some Scene {
         WindowGroup {
-//            PokemonScrollableView(itemSize: .init(width: 180, height: 180), itemPadding: 20, selectedPokemon: .constant(Pokemon.sample()))
-//            TestFontsView()
             ContentView()
         }
     }
 }
+
+let listPokemon = Pokemon.loadData()
+    .reduce(into: [String: Pokemon]()) { $0[$1.id] = $1 }

@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-
-private enum Tab: String, CaseIterable, Identifiable {
+ 
+enum PokemonDetailTab: String, CaseIterable, Identifiable {
     case about
     case baseStats
     case evolution
@@ -33,7 +33,7 @@ private enum Tab: String, CaseIterable, Identifiable {
 
 struct PokemonStatsTabView: View {
     
-    @State private var selectedTab: Tab = .about
+    @Binding var selectedTab: PokemonDetailTab
     
     var body: some View {
         HStack {
@@ -46,9 +46,9 @@ struct PokemonStatsTabView: View {
     }
     
     private var content: some View {
-        ForEach(Tab.allCases) { tabItem in
+        ForEach(PokemonDetailTab.allCases) { tabItem in
             Button {
-                withAnimation {
+                withAnimation(.easeOut) {
                     selectedTab = tabItem
                 }
             } label: {
@@ -75,6 +75,6 @@ struct PokemonStatsTabView: View {
 
 struct PokemonStatsView_Previews: PreviewProvider {
     static var previews: some View {
-        PokemonStatsTabView()
+        PokemonStatsTabView(selectedTab: .constant(.about))
     }
 }

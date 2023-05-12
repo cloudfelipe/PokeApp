@@ -131,7 +131,7 @@ struct PokemonAboutView_Previews: PreviewProvider {
         GeometryReader { proxy in
             VStack(spacing: 20.0) {
                 Spacer()
-                PokemonStatsTabView()
+                PokemonStatsTabView(selectedTab: .constant(.about))
                 PokemonAboutView(pokemon: Pokemon.sample())
 //                    .padding(.horizontal, 16)
                     .frame(height: 400)
