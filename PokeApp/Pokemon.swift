@@ -78,6 +78,8 @@ final class Pokemon: Decodable, Identifiable {
     let specialDefense: Double
     let speed: Double
     let total: Double
+    let malePercentage: String?
+    let femalePercentage: String?
     let genderless: Double
     let cycles: String
     let eggGroups: String
@@ -105,6 +107,8 @@ final class Pokemon: Decodable, Identifiable {
         case specialDefense = "special_defense"
         case speed
         case total
+        case malePercentage = "male_percentage"
+        case femalePercentage = "female_percentage"
         case genderless
         case cycles
         case eggGroups = "egg_groups"

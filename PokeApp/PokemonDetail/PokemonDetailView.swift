@@ -19,7 +19,7 @@ struct PokemonDetailView: View {
             ZStack {
                 Color(hex: pokemon.mainType.color)
                     .matchedGeometryEffect(id: "pkmColor \(pokemon.id)", in: namespace)
-
+                
                 VStack(spacing: 0.0) {
                     
                     HStack {
@@ -84,28 +84,21 @@ struct PokemonDetailView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 60)
                 
-                GeometryReader { proxy in
+                ZStack {
                     VStack {
-                        Spacer()
-                        VStack {
-                            Rectangle()
-                                .fill(Color.white)
-                                .frame(maxWidth: .infinity, maxHeight: m.size.height * 0.67)
-                                .mask {
-                                    RoundedRectangle(cornerRadius: 25.0)
-                                }
-                        }
-                        .overlay {
-                            VStack {
-                                PokemonStatsTabView()
-                                    .padding(.top, 25.0)
-                                Spacer()
-                            }
-                        }
+                        PokemonStatsTabView()
+                            .padding(.top, 25.0)
+                        PokemonAboutView(pokemon: pokemon)
+                            .frame(height: m.size.height * 0.57)
                     }
-                    .overlay {
-                        overlayImage(proxy: proxy)
+                    .background(Color.white)
+                    .mask {
+                        RoundedRectangle(cornerRadius: 20.0)
                     }
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+                }
+                .overlay {
+                    overlayImage(proxy: m)
                 }
             }
             .mask {
@@ -121,26 +114,27 @@ struct PokemonDetailView: View {
     
     func overlayImage(proxy: GeometryProxy) -> some View {
         
-        let offsetY = -((proxy.size.height * 0.30) / 2 )
+        let offsetY = -((proxy.size.height * 0.40) / 2 )
+        let pokemonSize = CGSize(width: 200, height: 200)
         
         return ZStack {
             Image("pokeball")
                 .resizable()
                 .foregroundColor(.white.opacity(0.2))
-                .frame(width: 200, height: 200)
+                .frame(width: pokemonSize.width - 20, height: pokemonSize.height - 20)
                 .rotationEffect(.degrees(pokeballRotationAngle))
                 .animation(.linear(duration: 10.0).repeatForever(autoreverses: false),
                            value: pokeballRotationAngle)
                 .onAppear {
                     pokeballRotationAngle = 360
                 }
-                .offset(y: offsetY )
+                .offset(y: offsetY + 15.0)
             
-            PokemonScrollableView(itemSize: .init(width: 180, height: 180),
+            PokemonScrollableView(itemSize: pokemonSize,
                                   itemPadding: 20,
                                   selectedPokemon: $pokemon)
-                .frame(height: 180)
-                .offset(y: offsetY )
+            .frame(height: pokemonSize.height)
+            .offset(y: offsetY )
         }
     }
 }

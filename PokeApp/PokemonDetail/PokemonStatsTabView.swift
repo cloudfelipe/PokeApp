@@ -36,15 +36,12 @@ struct PokemonStatsTabView: View {
     @State private var selectedTab: Tab = .about
     
     var body: some View {
-        VStack {
-            HStack {
-                content
-            }
-            .padding(8.0)
-            .mask {
-                RoundedRectangle(cornerRadius: 24.0, style: .continuous)
-            }
-            Spacer()
+        HStack {
+            content
+        }
+        .padding(.vertical)
+        .mask {
+            RoundedRectangle(cornerRadius: 24.0, style: .continuous)
         }
     }
     
@@ -70,7 +67,8 @@ struct PokemonStatsTabView: View {
                         }
                     )
             }
-            .frame(maxWidth: .infinity, minHeight: 40.0)
+            .frame(maxWidth: .infinity, idealHeight: 40.0)
+            
         }
     }
 }
