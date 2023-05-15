@@ -95,8 +95,7 @@ struct PokemonDetailView: View {
                             case .about:
                                 PokemonAboutView(pokemon: pokemon)
                             case .baseStats:
-                                Rectangle()
-                                    .fill(.white)
+                                PokemonBaseStatsView(pokemon: pokemon)
                             case .evolution:
                                 PokemonEvolutionView(pokemon: pokemon)
                             case .moves:
@@ -104,6 +103,8 @@ struct PokemonDetailView: View {
                                     .fill(.white)
                             }
                         }
+                        .padding(.top, 10.0)
+                        .padding(.leading, 5.0)
                         .frame(height: m.size.height * 0.57)
                     }
                     .background(Color.white)

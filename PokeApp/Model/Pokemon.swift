@@ -7,56 +7,6 @@
 
 import Foundation
 
-enum PokemonType: String, Decodable {
-    case bug = "Bug"
-    case electric = "Electric"
-    case steel = "Steel"
-    case fairy = "Fairy"
-    case ghost = "Ghost"
-    case grass = "Grass"
-    case fighting = "Fighting"
-    case dragon = "Dragon"
-    case fire = "Fire"
-    case ground = "Ground"
-    case water = "Water"
-    case poison = "Poison"
-    case psychic = "Psychic"
-    case flying = "Flying"
-    case rock = "Rock"
-    case ice = "Ice"
-    case normal = "Normal"
-    case dark = "Dark"
-    case unknown = "Unknown" //<- Missigno
-    
-    var name: String {
-        return self.rawValue
-    }
-    
-    var color: String {
-        switch self {
-        case .normal: return "#A8A77A"
-        case .fire: return "#EE8130"
-        case .water: return "#6390F0"
-        case .electric: return "#F7D02C"
-        case .grass: return "#7AC74C"
-        case .ice: return "#96D9D6"
-        case .fighting: return "#C22E28"
-        case .poison: return "#A33EA1"
-        case .ground: return "#E2BF65"
-        case .flying: return "#A98FF3"
-        case .psychic: return "#F95587"
-        case .bug: return "#A6B91A"
-        case .rock: return "#B6A136"
-        case .ghost: return "#735797"
-        case .dragon: return "#6F35FC"
-        case .dark: return "#705746"
-        case .steel: return "#B7B7CE"
-        case .fairy: return "#D685AD"
-        case .unknown: return "#2b1f17"
-        }
-    }
-}
-
 final class Pokemon: Decodable, Identifiable {
     
     let name: String
@@ -119,6 +69,18 @@ final class Pokemon: Decodable, Identifiable {
     
     var mainType: PokemonType {
         typeOfPokemon.first ?? .unknown
+    }
+    
+    var typeEffectiveness: [PokemonType: Double] {
+        var effectiveness: [PokemonType: Double] = [:]
+        
+        for type in PokemonType.allCases where type != .unknown {
+            let typeEffectiveness = typeOfPokemon
+                .map { $0.effectiveness(to: type)}
+                .reduce(1.0, *)
+            effectiveness[type] = typeEffectiveness
+        }
+        return effectiveness
     }
     
     static func sample() -> Pokemon {
