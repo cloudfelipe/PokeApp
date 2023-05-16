@@ -22,7 +22,10 @@ struct PokemonGridItemView: View {
                         Text(pokemon.id)
                             .foregroundColor(Color.black.opacity(0.2))
                             .customFont(.title3)
-                            .matchedGeometryEffect(id: "pkmNumber \(pokemon.id)", in: namespace, isSource: false)
+                            .matchedGeometryEffect(id: "pkmNumber \(pokemon.id)",
+                                                   in: namespace,
+                                                   properties: .position,
+                                                   isSource: false)
                     }
                     
                     HStack {
@@ -32,7 +35,10 @@ struct PokemonGridItemView: View {
                                 .customFont(.title3)
                                 .foregroundColor(Color.white)
                                 .fontDesign(.rounded)
-                                .matchedGeometryEffect(id: "pkmName \(pokemon.id)", in: namespace, isSource: false)
+                                .matchedGeometryEffect(id: "pkmName \(pokemon.id)",
+                                                       in: namespace,
+                                                       properties: .position,
+                                                       isSource: false)
                             
                             
                             VStack(alignment: .leading, spacing: 10.0) {
@@ -47,7 +53,10 @@ struct PokemonGridItemView: View {
                                             RoundedRectangle(cornerRadius: 20.0)
                                                 .fill(Color.white.opacity(0.3))
                                         )
-                                        .matchedGeometryEffect(id: "pkm: \(pokemon.id) type: \(type.name)", in: namespace)
+                                        .matchedGeometryEffect(
+                                            id: "pkm: \(pokemon.id) type: \(type.name)",
+                                            in: namespace,
+                                            properties: .position)
                                 }
                             }
                             Spacer()
@@ -68,7 +77,9 @@ struct PokemonGridItemView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                         }
-                        .matchedGeometryEffect(id: "pkmAsset \(pokemon.id)", in: namespace)
+                        .matchedGeometryEffect(id: "pkmAsset \(pokemon.id)",
+                                               in: namespace,
+                                               properties: .position)
                         .frame(width: m.size.width * 0.5, height: m.size.width * 0.5)
                         .offset(y: 2)
                     }
@@ -79,7 +90,8 @@ struct PokemonGridItemView: View {
             )
             .mask {
                 RoundedRectangle(cornerRadius: 15.0)
-                    .matchedGeometryEffect(id: "mask \(pokemon.id)", in: namespace)
+                    .matchedGeometryEffect(id: "mask \(pokemon.id)",
+                                           in: namespace)
             }
         }
     }
