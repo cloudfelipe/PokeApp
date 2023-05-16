@@ -12,6 +12,8 @@ struct PokeAppApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+//            TestSw()
+//            PokemonBaseStatsView(pokemon: listPokemon["#004"]!)
         }
     }
 }

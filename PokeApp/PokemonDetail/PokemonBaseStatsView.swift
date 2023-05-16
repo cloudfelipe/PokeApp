@@ -12,24 +12,25 @@ struct PokemonBaseStatsView: View {
     let pokemon: Pokemon
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                gridStats
-                
-                Text("Type defenses")
-                    .customFont(.title2)
-                    .padding(.top, 20.0)
-                    .padding(.bottom, 10.0)
-                
-                Text("The effectiveness of each type on \(pokemon.name)")
-                    .customFont(.body)
-                    .opacity(0.3)
-                    .padding(.bottom, 15.0)
-                
-                gridEffectiveness
-            }
+        content
+    }
+    
+    private var content: some View {
+        VStack(alignment: .leading) {
+            gridStats
+            
+            Text("Type defenses")
+                .customFont(.title2)
+                .padding(.top, 20.0)
+                .padding(.bottom, 10.0)
+            
+            Text("The effectiveness of each type on \(pokemon.name)")
+                .customFont(.body)
+                .opacity(0.3)
+                .padding(.bottom, 15.0)
+            
+            gridEffectiveness
         }
-        .padding([.horizontal, .bottom])
     }
     
     private var gridStats: some View {
@@ -141,6 +142,6 @@ private struct ProgressBarView: View {
 
 struct PokemonBaseStatsView_Previews: PreviewProvider {
     static var previews: some View {
-        PokemonBaseStatsView(pokemon: listPokemon["#001"]!)
+        PokemonBaseStatsView(pokemon: listPokemon["#006"]!)
     }
 }

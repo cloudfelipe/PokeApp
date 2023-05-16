@@ -12,6 +12,7 @@ struct PokemonScrollableView: View {
     @State private var scrollEffectValue: Double = 13
     @State private var activePageIndex: Int = 0
     
+    let namespace: Namespace.ID
     let itemSize: CGSize
     let itemPadding: CGFloat
     
@@ -40,7 +41,8 @@ struct PokemonScrollableView: View {
                                     .renderingMode(.template)
                                     .foregroundColor(Color.black.opacity(position))
                                 image.resizable()
-                                    .opacity( 1 - position)
+                                    .opacity(1 - position)
+                                    
                             }
                             .aspectRatio(contentMode: .fit)
                             .frame(width: itemSize.width, height: itemSize.height)
@@ -73,8 +75,11 @@ struct PokemonScrollableView: View {
 }
 
 struct PokemonScrollableView_Previews: PreviewProvider {
+    @Namespace static var namespace
+    
     static var previews: some View {
-        PokemonScrollableView(itemSize: .init(width: 260, height: 260),
+        PokemonScrollableView(namespace: namespace,
+                              itemSize: .init(width: 260, height: 260),
                               itemPadding: 20,
                               selectedPokemon: .constant(Pokemon.sample()))
     }

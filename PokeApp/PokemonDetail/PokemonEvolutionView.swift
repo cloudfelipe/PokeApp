@@ -45,7 +45,6 @@ struct PokemonEvolutionView: View {
                 .padding(.horizontal)
             }
         }
-        .padding(.horizontal)
     }
 }
 

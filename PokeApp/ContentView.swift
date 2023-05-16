@@ -27,15 +27,17 @@ struct ContentView: View {
             ScrollViewReader { reader in
                 ScrollView {
                     
-                    scrollDetection
+//                    scrollDetection
                     
                     LazyVGrid(columns: columns, spacing: 16.0) {
                         ForEach(pokemons) { item in
                             PokemonGridItemView(namespace: namespace, pokemon: item)
                                 .frame(maxWidth: .infinity, idealHeight: 150, maxHeight: .infinity)
                                 .onTapGesture {
-                                    selectedPkmn = item
+                                    
                                     withAnimation(.easeInOut) {
+                                        
+                                        selectedPkmn = item
                                         shown.toggle()
                                     }
                                 }
@@ -43,11 +45,11 @@ struct ContentView: View {
                         }
                     }
                     .padding(.horizontal, 16)
-                    .onAppear {
-                        if let id = selectedPkmn?.id {
-                            reader.scrollTo(id, anchor: .center)
-                        }
-                    }
+//                    .onAppear {
+//                        if let id = selectedPkmn?.id {
+//                            reader.scrollTo(id, anchor: .center)
+//                        }
+//                    }
                 }
                 .coordinateSpace(name: "scroll")
                 .onPreferenceChange(ScrollPreferenceKey.self) { value in
@@ -59,30 +61,34 @@ struct ContentView: View {
                     Color.clear.frame(height: 70.0)
                 }
                 .overlay {
-                    HStack {
-                        Text("Pokedex")
-                            .customFont(.largeTitle)
-                        Spacer()
-                    }
-                    .padding(16.0)
-                    .background(content: {
-                        if hasScrolled {
-                            Color.clear
-                                .background(.ultraThinMaterial)
-                        } else {
-                            Color.clear
-                        }
-                            
-                    })
+                    headerView
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
             }
             
         } else {
             PokemonDetailView(namespace: namespace,
-                              isShown: $shown,
-                              pokemon: selectedPkmn!)
+                              pokemon: selectedPkmn!,
+                              isShown: $shown
+            )
         }
+    }
+    
+    private var headerView: some View {
+        HStack {
+            Text("Pokedex")
+                .customFont(.largeTitle)
+            Spacer()
+        }
+        .padding(16.0)
+        .background(content: {
+            if hasScrolled {
+                Color.clear
+                    .background(.ultraThinMaterial)
+            } else {
+                Color.clear
+            }
+        })
     }
     
     private var scrollDetection: some View {

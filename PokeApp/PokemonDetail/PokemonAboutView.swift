@@ -12,97 +12,94 @@ struct PokemonAboutView: View {
     let pokemon: Pokemon
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 25.0) {
-                Text(pokemon.xDescription)
-                    .customFont(.body)
-                    .layoutPriority(1)
-                
-                HStack(spacing: 10.0) {
-                    VStack(alignment: .leading, spacing: 5.0) {
-                        Text("Height")
-                            .opacity(0.3)
-                        Text(pokemon.height)
-                    }
-                    .customFont(.body)
-                    
-                    Color.clear
-                        .frame(width: 20.0, height: 20.0)
-                    
-                    VStack(alignment: .leading, spacing: 5.0) {
-                        Text("Weight")
-                            .opacity(0.3)
-                        Text(pokemon.weight)
-                            
-                    }
-                    .customFont(.body)
-                    
-                    Spacer()
+        VStack(alignment: .leading, spacing: 25.0) {
+            Text(pokemon.xDescription)
+                .customFont(.body)
+                .layoutPriority(1)
+            
+            HStack(spacing: 10.0) {
+                VStack(alignment: .leading, spacing: 5.0) {
+                    Text("Height")
+                        .opacity(0.3)
+                    Text(pokemon.height)
                 }
-                .padding(16)
-                .background(Color.white)
-                .mask {
-                    RoundedRectangle(cornerRadius: 16)
-                }
-                .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 3)
+                .customFont(.body)
                 
-                header(title: "Breeding")
+                Color.clear
+                    .frame(width: 20.0, height: 20.0)
                 
-                HStack {
-                    VStack(alignment: .leading, spacing: 10.0) {
-                        Text("Gender")
-                        Text("Egg Groups")
-                        Text("Egg Cycle")
-                    }
-                    .customFont(.body)
-                    .opacity(0.4)
-                    
-                    Color.clear
-                        .frame(width: 20.0, height: 20.0)
-                    
-                    VStack(alignment: .leading, spacing: 10.0) {
-                        HStack(spacing: 20.0) {
-                            Label {
-                                Text(pokemon.malePercentage ?? "N/A")
-                            } icon: {
-                                Image("male")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 15, height: 15)
-                            }
-                            
-                            Label {
-                                Text(pokemon.femalePercentage ?? "N/A")
-                            } icon: {
-                                Image("female")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 15, height: 15)
-                            }
-                        }
+                VStack(alignment: .leading, spacing: 5.0) {
+                    Text("Weight")
+                        .opacity(0.3)
+                    Text(pokemon.weight)
                         
-                        Text(pokemon.eggGroups)
-                        
-                        Text(pokemon.cycles)
-                    }
-                    .customFont(.body)
                 }
-                
-                header(title: "Location")
-                
-                Rectangle()
-                    .foregroundColor(Color.gray.opacity(0.3))
-                    .frame(height: 170.0)
-                    .mask {
-                        RoundedRectangle(cornerRadius: 16.0)
-                    }
-                
-                header(title: "Training")
-                itemRow(title: "Base EXP", value: pokemon.baseExp)
+                .customFont(.body)
                 
                 Spacer()
             }
-            .padding([.horizontal, .bottom])
+            .padding(16)
+            .background(Color.white)
+            .mask {
+                RoundedRectangle(cornerRadius: 16)
+            }
+            .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 3)
+            
+            header(title: "Breeding")
+            
+            HStack {
+                VStack(alignment: .leading, spacing: 10.0) {
+                    Text("Gender")
+                    Text("Egg Groups")
+                    Text("Egg Cycle")
+                }
+                .customFont(.body)
+                .opacity(0.4)
+                
+                Color.clear
+                    .frame(width: 20.0, height: 20.0)
+                
+                VStack(alignment: .leading, spacing: 10.0) {
+                    HStack(spacing: 20.0) {
+                        Label {
+                            Text(pokemon.malePercentage ?? "N/A")
+                        } icon: {
+                            Image("male")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 15, height: 15)
+                        }
+                        
+                        Label {
+                            Text(pokemon.femalePercentage ?? "N/A")
+                        } icon: {
+                            Image("female")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 15, height: 15)
+                        }
+                    }
+                    
+                    Text(pokemon.eggGroups)
+                    
+                    Text(pokemon.cycles)
+                }
+                .customFont(.body)
+            }
+            
+            header(title: "Location")
+            
+            Rectangle()
+                .foregroundColor(Color.gray.opacity(0.3))
+                .frame(height: 170.0)
+                .mask {
+                    RoundedRectangle(cornerRadius: 16.0)
+                }
+            
+            header(title: "Training")
+            itemRow(title: "Base EXP", value: pokemon.baseExp)
+            
+            Spacer()
         }
     }
     
@@ -132,9 +129,10 @@ struct PokemonAboutView_Previews: PreviewProvider {
             VStack(spacing: 20.0) {
                 Spacer()
                 PokemonStatsTabView(selectedTab: .constant(.about))
-                PokemonAboutView(pokemon: Pokemon.sample())
-//                    .padding(.horizontal, 16)
-                    .frame(height: 400)
+                ScrollView {
+                    PokemonAboutView(pokemon: Pokemon.sample())
+                        .frame(height: 400)
+                }
             }
             .frame(height: .infinity)
         }

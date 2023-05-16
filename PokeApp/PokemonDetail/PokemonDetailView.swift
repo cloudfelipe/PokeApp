@@ -2,7 +2,7 @@
 //  PokemonDetailView.swift
 //  PokeApp
 //
-//  Created by Felipe Correa on 9/05/23.
+//  Created by Felipe Correa on 15/05/23.
 //
 
 import SwiftUI
@@ -11,147 +11,246 @@ struct PokemonDetailView: View {
     
     var namespace: Namespace.ID
     
-    @Binding var isShown: Bool
     @State var pokemon: Pokemon
+    @Binding var isShown: Bool
     
-    @State var selectedTab: PokemonDetailTab = .about
+    @State private var isExpanded = true
+    @State private var selectedTab: PokemonDetailTab = .about
     
     var body: some View {
-        GeometryReader { m in
+        
+        ZStack {
+            Color(hex: pokemon.mainType.color)!
+                .mask(
+                    RoundedRectangle(cornerRadius: 40)
+                        .matchedGeometryEffect(id: "pkmColor \(pokemon.id)", in: namespace)
+                        .matchedGeometryEffect(id: "mask \(pokemon.id)",
+                                               in: namespace)
+                )
+                .ignoresSafeArea()
+            
             ZStack {
-                Color(hex: pokemon.mainType.color)
-                    .matchedGeometryEffect(id: "pkmColor \(pokemon.id)", in: namespace)
+                headerView
+                    .frame(maxHeight: .infinity, alignment: .top)
+                    .padding(.horizontal)
+
+                pokemonInfo
                 
-                VStack(spacing: 0.0) {
+                Group {
+                    PokeballView(animationDuration: 10.0)
+                        .frame(width: 180, height: 180)
                     
-                    HStack {
-                        Button {
-                            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                                isShown.toggle()
-                            }
-                        } label: {
-                            Image(systemName: "arrow.backward")
-                                .resizable()
-                                .frame(width: 20.0, height: 20.0)
-                                .foregroundColor(.white)
-                        }
-                        Spacer()
-                        Button {
-                            
-                        } label: {
-                            Image(systemName: "heart")
-                                .resizable()
-                                .frame(width: 20.0, height: 20.0)
-                                .foregroundColor(.white)
-                        }
-                    }
-                    .padding(.bottom, 15.0)
-                    
-                    HStack {
-                        Text(pokemon.name)
-                            .customFont(.largeTitle)
-                            .foregroundColor(.white)
-                            .matchedGeometryEffect(id: "pkmName \(pokemon.id)", in: namespace)
-                        Spacer()
-                        Text(pokemon.id)
-                            .customFont(.title2)
-                            .foregroundColor(.white)
-                            .matchedGeometryEffect(id: "pkmNumber \(pokemon.id)", in: namespace)
-                    }
-                    .padding(.bottom, 10.0)
-                    HStack {
-                        ForEach(pokemon.typeOfPokemon.suffix(2), id: \.self) { type in
-                            Text(type.name)
-                                .customFont(.caption)
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 15.0)
-                                .padding(.vertical, 5.0)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 20.0)
-                                        .fill(Color.white.opacity(0.3))
-                                )
-                                .matchedGeometryEffect(id: "pkm: \(pokemon.id) type: \(type.name)", in: namespace)
-                        }
-                        
-                        Spacer()
-                        
-                        Text("\(pokemon.category) Pokemon")
-                            .customFont(.body)
-                            .foregroundColor(.white)
-                            .layoutPriority(1)
-                    }
-                    .frame(height: 30.0)
-                    Spacer()
+                    PokemonScrollableView(namespace: namespace,
+                                          itemSize: .init(width: 200, height: 200),
+                                          itemPadding: 10,
+                                          selectedPokemon: $pokemon)
+                    .frame(height: 200.0)
+                    .matchedGeometryEffect(id: "pkmAsset \(pokemon.id)",
+                                           in: namespace,
+                                           properties: .position)
+                    .opacity(isExpanded ? 1.0: 0.0)
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 60)
                 
-                ZStack {
-                    VStack {
-                        PokemonStatsTabView(selectedTab: $selectedTab)
-                            .padding(.top, 25.0)
-                        Group {
-                            switch selectedTab {
-                            case .about:
-                                PokemonAboutView(pokemon: pokemon)
-                            case .baseStats:
-                                PokemonBaseStatsView(pokemon: pokemon)
-                            case .evolution:
-                                PokemonEvolutionView(pokemon: pokemon)
-                            case .moves:
-                                Rectangle()
-                                    .fill(.white)
-                            }
-                        }
-                        .padding(.top, 10.0)
-                        .padding(.leading, 5.0)
-                        .frame(height: m.size.height * 0.57)
-                    }
-                    .background(Color.white)
-                    .mask {
-                        RoundedRectangle(cornerRadius: 20.0)
-                    }
-                    .frame(maxHeight: .infinity, alignment: .bottom)
-                }
-                .overlay {
-                    overlayImage(proxy: m)
-                }
+                .frame(height: 200.0)
+                .frame(maxHeight: .infinity, alignment: .center)
+                .offset(y: -100)
             }
-            .mask {
-                RoundedRectangle(cornerRadius: 15.0)
-                    .matchedGeometryEffect(id: "mask \(pokemon.id)", in: namespace)
-            }
-            .ignoresSafeArea()
         }
     }
     
+    private var subHeaderView: some View {
+        HStack {
+            ForEach(pokemon.typeOfPokemon.suffix(2), id: \.self) { type in
+                Text(type.name)
+                    .customFont(.caption)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 15.0)
+                    .padding(.vertical, 5.0)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20.0)
+                            .fill(Color.white.opacity(0.3))
+                    )
+                    .matchedGeometryEffect(
+                        id: "pkm: \(pokemon.id) type: \(type.name)",
+                        in: namespace,
+                        properties: .position)
+            }
+            
+            Spacer()
+            
+            Text("\(pokemon.category) Pokemon")
+                .customFont(.body)
+                .foregroundColor(.white)
+                .layoutPriority(1)
+        }
+        .frame(height: 30.0)
+    }
+    
+    private var headerView: some View {
+        VStack(spacing: 0.0) {
+            
+            HStack {
+                Button {
+                    withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                        isShown.toggle()
+                    }
+                } label: {
+                    Label(title: {}, icon: {
+                        Image(systemName: "arrow.backward")
+                            .customFont(.title)
+                            .foregroundColor(.white)
+                    })
+                }
+                Spacer()
+                
+                if !isExpanded {
+                    pokemonName
+                        .customFont(.title)
+                    Spacer()
+                }
+                
+                Button {
+                    
+                } label: {
+                    Label(title: {}, icon: {
+                        Image(systemName: "heart")
+                            .customFont(.title)
+                            .foregroundColor(.white)
+                    })
+                }
+                .overlay {
+                    PokeballView(animationDuration: 5.0)
+                        .frame(width: 150, height: 150)
+                        .opacity(isExpanded ? 0.0: 1.0)
+                }
+                
+            }
+            .frame(height: 60.0)
+            
+            HStack {
+                if isExpanded {
+                    pokemonName
+                        .customFont(.largeTitle)
+                }
+                Spacer()
+                if isExpanded {
+                    Text(pokemon.id)
+                        .customFont(.title2)
+                        .foregroundColor(.white)
+                        .transition(.opacity)
+                        .matchedGeometryEffect(id: "pkmNumber \(pokemon.id)",
+                                               in: namespace,
+                                               properties: .position)
+                }
+            }
+            .padding(.bottom, 10.0)
+            
+            subHeaderView
+                .opacity(isExpanded ? 1.0 : 0.0)
+        }
+    }
+    
+    private var pokemonName: some View {
+        Text(pokemon.name)
+            .foregroundColor(.white)
+            .matchedGeometryEffect(id: "pkmName2 \(pokemon.id)",
+                                   in: namespace,
+                                   properties: .position)
+            .matchedGeometryEffect(id: "pkmName \(pokemon.id)",
+                                   in: namespace,
+                                   properties: .position)
+    }
+    
+    private var pokemonInfo: some View {
+        GeometryReader { proxy in
+            let height = proxy.size.height
+            
+            ZStack {
+                Color.white
+                
+                VStack {
+                    
+                    PokemonStatsTabView(selectedTab: $selectedTab)
+                        .padding(.top, 30.0)
+                    
+                    ScrollView(showsIndicators: false) {
+                        
+                        GeometryReader { m in
+                            Color.clear
+                                .preference(key: ScrollViewOffsetKey.self,
+                                            value: m.frame(in: .named("scroll")).minY)
+                        }
+                        .frame(height: 0)
+                        
+                        switch selectedTab {
+                        case .about:
+                            PokemonAboutView(pokemon: pokemon)
+                                .padding()
+                        case .baseStats:
+                            PokemonBaseStatsView(pokemon: pokemon)
+                                .padding()
+                        case .evolution:
+                            PokemonEvolutionView(pokemon: pokemon)
+                                .padding()
+                        case .moves:
+                            Rectangle()
+                                .fill(.white)
+                        }
+                    }
+                    .coordinateSpace(name: "scroll")
+                    .onPreferenceChange(ScrollViewOffsetKey.self) { value in
+                        if value > 30 && !isExpanded {
+                            withAnimation(.easeOut) {
+                                isExpanded = true
+                            }
+                        } else if value < -30 && isExpanded {
+                            withAnimation(.easeOut) {
+                                isExpanded = false
+                            }
+                        }
+                    }
+                }
+            }
+            .mask {
+                RoundedRectangle(cornerRadius: 30.0)
+            }
+            .frame(height: isExpanded ? height * 0.60 : height * 0.94)
+            .frame(maxHeight: .infinity, alignment: .bottom)
+            .ignoresSafeArea(.all, edges: .bottom)
+        }
+    }
+    
+}
+
+private struct ScrollViewOffsetKey: PreferenceKey {
+    typealias Value = CGFloat
+    static var defaultValue = CGFloat.zero
+    static func reduce(value: inout Value, nextValue: () -> Value) {
+        value += nextValue()
+    }
+}
+
+struct PokeballView: View {
+
+    let animationDuration: Double
     @State private var pokeballRotationAngle: Double = 0.0
     @State private var animatePokeball = false
     
-    func overlayImage(proxy: GeometryProxy) -> some View {
-        
-        let offsetY = -((proxy.size.height * 0.40) / 2 )
-        let pokemonSize = CGSize(width: 200, height: 200)
-        
-        return ZStack {
-            Image("pokeball")
-                .resizable()
-                .foregroundColor(.white.opacity(0.2))
-                .frame(width: pokemonSize.width - 20, height: pokemonSize.height - 20)
-                .rotationEffect(.degrees(pokeballRotationAngle))
-                .animation(.linear(duration: 10.0).repeatForever(autoreverses: false),
-                           value: pokeballRotationAngle)
-                .onAppear {
-                    pokeballRotationAngle = 360
-                }
-                .offset(y: offsetY + 15.0)
-            
-            PokemonScrollableView(itemSize: pokemonSize,
-                                  itemPadding: 20,
-                                  selectedPokemon: $pokemon)
-            .frame(height: pokemonSize.height)
-            .offset(y: offsetY )
-        }
+    init(animationDuration: Double = 10.0) {
+        self.animationDuration = animationDuration
+    }
+    
+    var body: some View {
+        Image("pokeball")
+            .resizable()
+            .foregroundColor(.white.opacity(0.2))
+            .rotationEffect(.degrees(pokeballRotationAngle))
+            .animation(.linear(duration: animationDuration)
+                .repeatForever(autoreverses: false),
+                       value: pokeballRotationAngle)
+            .onAppear {
+                pokeballRotationAngle = 360
+            }
     }
 }
 
@@ -161,7 +260,16 @@ struct PokemonDetailView_Previews: PreviewProvider {
     
     static var previews: some View {
         PokemonDetailView(namespace: namespace,
-                          isShown: .constant(true),
-                          pokemon: Pokemon.sample())
+                          pokemon: .sample(),
+                          isShown: .constant(true))
+    }
+}
+
+
+struct ScrollViewHeightPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
