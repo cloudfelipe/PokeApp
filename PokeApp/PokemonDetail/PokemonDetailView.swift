@@ -48,9 +48,9 @@ struct PokemonDetailView: View {
                     .matchedGeometryEffect(id: "pkmAsset \(pokemon.id)",
                                            in: namespace,
                                            properties: .position)
-                    .opacity(isExpanded ? 1.0: 0.0)
+                    
                 }
-                
+                .opacity(isExpanded ? 1.0: 0.0)
                 .frame(height: 200.0)
                 .frame(maxHeight: .infinity, alignment: .center)
                 .offset(y: -100)
@@ -172,6 +172,7 @@ struct PokemonDetailView: View {
                     
                     PokemonStatsTabView(selectedTab: $selectedTab)
                         .padding(.top, 30.0)
+                        .padding(.horizontal)
                     
                     ScrollView(showsIndicators: false) {
                         
