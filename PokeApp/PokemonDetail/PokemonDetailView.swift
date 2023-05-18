@@ -30,10 +30,22 @@ struct PokemonDetailView: View {
                 .ignoresSafeArea()
             
             ZStack {
-                headerView
-                    .frame(maxHeight: .infinity, alignment: .top)
-                    .padding(.horizontal)
-
+                VStack(spacing: 10) {
+                    NavigationBar(title: pokemon.name,
+                                  subtitle: pokemon.id,
+                                  isExpanded: $isExpanded,
+                                  backButtonAction: {
+                        withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                            isShown.toggle()
+                        }
+                    })
+                    .foregroundColor(.white)
+                    subHeaderView
+                        .opacity(isExpanded ? 1.0 : 0.0)
+                }
+                .frame(maxHeight: .infinity, alignment: .top)
+                .padding(.horizontal)
+                
                 pokemonInfo
                 
                 Group {
@@ -84,70 +96,6 @@ struct PokemonDetailView: View {
                 .layoutPriority(1)
         }
         .frame(height: 30.0)
-    }
-    
-    private var headerView: some View {
-        VStack(spacing: 0.0) {
-            
-            HStack {
-                Button {
-                    withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                        isShown.toggle()
-                    }
-                } label: {
-                    Label(title: {}, icon: {
-                        Image(systemName: "arrow.backward")
-                            .customFont(.title)
-                            .foregroundColor(.white)
-                    })
-                }
-                Spacer()
-                
-                if !isExpanded {
-                    pokemonName
-                        .customFont(.title)
-                    Spacer()
-                }
-                
-                Button {
-                    
-                } label: {
-                    Label(title: {}, icon: {
-                        Image(systemName: "heart")
-                            .customFont(.title)
-                            .foregroundColor(.white)
-                    })
-                }
-                .overlay {
-                    PokeballView(animationDuration: 5.0)
-                        .frame(width: 150, height: 150)
-                        .opacity(isExpanded ? 0.0: 1.0)
-                }
-                
-            }
-            .frame(height: 60.0)
-            
-            HStack {
-                if isExpanded {
-                    pokemonName
-                        .customFont(.largeTitle)
-                }
-                Spacer()
-                if isExpanded {
-                    Text(pokemon.id)
-                        .customFont(.title2)
-                        .foregroundColor(.white)
-                        .transition(.opacity)
-                        .matchedGeometryEffect(id: "pkmNumber \(pokemon.id)",
-                                               in: namespace,
-                                               properties: .position)
-                }
-            }
-            .padding(.bottom, 10.0)
-            
-            subHeaderView
-                .opacity(isExpanded ? 1.0 : 0.0)
-        }
     }
     
     private var pokemonName: some View {

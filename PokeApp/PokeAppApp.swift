@@ -11,8 +11,8 @@ import SwiftUI
 struct PokeAppApp: App {
     var body: some Scene {
         WindowGroup {
+//            NavigationBar(backButtonAction: {})
             ContentView()
-//            TestSw()
 //            PokemonBaseStatsView(pokemon: listPokemon["#004"]!)
         }
     }

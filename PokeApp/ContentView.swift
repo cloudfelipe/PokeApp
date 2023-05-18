@@ -24,46 +24,33 @@ struct ContentView: View {
     
     var body: some View {
         if !shown {
-            ScrollViewReader { reader in
-                ScrollView {
-                    
-//                    scrollDetection
-                    
-                    LazyVGrid(columns: columns, spacing: 16.0) {
-                        ForEach(pokemons) { item in
-                            PokemonGridItemView(namespace: namespace, pokemon: item)
-                                .frame(maxWidth: .infinity, idealHeight: 150, maxHeight: .infinity)
-                                .onTapGesture {
+            ScrollView {
+                
+                scrollDetection
+                
+                LazyVGrid(columns: columns, spacing: 16.0) {
+                    ForEach(pokemons) { item in
+                        PokemonGridItemView(namespace: namespace, pokemon: item)
+                            .frame(maxWidth: .infinity, idealHeight: 150, maxHeight: .infinity)
+                            .onTapGesture {
+                                
+                                withAnimation(.easeInOut) {
                                     
-                                    withAnimation(.easeInOut) {
-                                        
-                                        selectedPkmn = item
-                                        shown.toggle()
-                                    }
+                                    selectedPkmn = item
+                                    shown.toggle()
                                 }
-                                .id(item.id)
-                        }
-                    }
-                    .padding(.horizontal, 16)
-//                    .onAppear {
-//                        if let id = selectedPkmn?.id {
-//                            reader.scrollTo(id, anchor: .center)
-//                        }
-//                    }
-                }
-                .coordinateSpace(name: "scroll")
-                .onPreferenceChange(ScrollPreferenceKey.self) { value in
-                    withAnimation(.easeInOut) {
-                        self.hasScrolled = value < 0
+                            }
+                            .id(item.id)
                     }
                 }
-                .safeAreaInset(edge: .top) {
-                    Color.clear.frame(height: 70.0)
-                }
-                .overlay {
-                    headerView
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                }
+                .padding(.horizontal, 16)
+            }
+            .coordinateSpace(name: "scroll")
+            .safeAreaInset(edge: .top) {
+                Color.clear.frame(height: 120.0)
+            }
+            .overlay {
+                headerView
             }
             
         } else {
@@ -75,29 +62,29 @@ struct ContentView: View {
     }
     
     private var headerView: some View {
-        HStack {
-            Text("Pokedex")
-                .customFont(.largeTitle)
-            Spacer()
-        }
-        .padding(16.0)
-        .background(content: {
-            if hasScrolled {
-                Color.clear
-                    .background(.ultraThinMaterial)
-            } else {
-                Color.clear
-            }
-        })
+        NavigationBar(title: "Pokedex",
+                      subtitle: "",
+                      isExpanded: .constant(!hasScrolled),
+                      backButtonAction: {})
+            .foregroundColor(.black)
+            .background(Color.white)
+            .frame(maxHeight: .infinity, alignment: .top)
+            .padding(.horizontal)
     }
     
     private var scrollDetection: some View {
         GeometryReader { proxy in
+            let minY = proxy.frame(in: .named("scroll")).minY
             Color.clear
                 .preference(key: ScrollPreferenceKey.self,
-                            value: proxy.frame(in: .named("scroll")).minY)
+                            value: minY)
         }
         .frame(height: 0)
+        .onPreferenceChange(ScrollPreferenceKey.self) { value in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                self.hasScrolled = value < -20
+            }
+        }
     }
 }
 
