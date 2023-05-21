@@ -37,8 +37,7 @@ struct PokemonGridItemView: View {
                                 .fontDesign(.rounded)
                                 .matchedGeometryEffect(id: "pkmName \(pokemon.id)",
                                                        in: namespace,
-                                                       properties: .position,
-                                                       isSource: false)
+                                                       properties: .position)
                             
                             
                             VStack(alignment: .leading, spacing: 10.0) {
