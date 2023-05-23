@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
- 
+
 enum PokemonDetailTab: String, CaseIterable, Identifiable {
     case about
     case baseStats
@@ -37,75 +37,53 @@ struct PokemonStatsTabView: View {
     
     @Binding var selectedTab: PokemonDetailTab
     
-    @State private var selectedTabItemFrame: CGRect = .zero
-    @State private var tabItemFrames: [CGRect] = [.zero,.zero,.zero,.zero]
-    
     var body: some View {
         HStack {
             content
         }
-        .overlay (
-            overlay
-        )
         .coordinateSpace(name: "TabView")
     }
     
     private var content: some View {
-        ForEach(Array(PokemonDetailTab.allCases.enumerated()), id: \.offset) { index, tabItem in
+        ForEach(PokemonDetailTab.allCases) { tabItem in
             Button {
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                     self.selectedTab = tabItem
-                    self.selectedTabItemFrame = tabItemFrames[index]
                 }
             } label: {
-                Text(tabItem.title)
-                    .customFont(.subheadline2)
-                    .frame(height: 40.0)
-                    .overlay {
-                        GeometryReader { proxy in
-                            let frame = proxy.frame(in: .named("TabView"))
-                            Color.clear
-                                .preference(key: TabBarItemPreferenceFrameKey.self, value: frame)
-                                .onPreferenceChange(TabBarItemPreferenceFrameKey.self) { value in
-                                    tabItemFrames[index] = value
-                                    //used for positioning first element when first run
-                                    if selectedTab == tabItem {
-                                        self.selectedTabItemFrame = tabItemFrames[index]
-                                    }
+                VStack(spacing: 0.0) {
+                    Text(tabItem.title)
+                        .customFont(.subheadline2)
+                        .padding(.vertical, 10.0)
+                        .overlay {
+                            GeometryReader { proxy in
+                                if selectedTab == tabItem {
+                                    RoundedRectangle(cornerRadius: 2)
+                                        .foregroundColor(.purple.opacity(0.7))
+                                        .frame(width: proxy.size.width, height: 4.0)
+                                        .frame(maxHeight: .infinity, alignment: .bottom)
+                                        .matchedGeometryEffect(id: "tab", in: namespace)
                                 }
+                            }
                         }
-                    }
+                }
             }
             .foregroundColor( selectedTab == tabItem ? .primary : .secondary)
             
-            //TODO: Calculate last index instead to check item directly
+            //TODO: Calculate last index instead of checking item directly
             if tabItem != .moves { Spacer() }
         }
         
-    }
-    
-    private var overlay: some View {
-        HStack {
-            RoundedRectangle(cornerRadius: 2)
-                .foregroundColor(.purple.opacity(0.7))
-                .frame(width: selectedTabItemFrame.width, height: 4.0)
-                .position(x: selectedTabItemFrame.midX, y: selectedTabItemFrame.maxY)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-    }
-}
-
-private struct TabBarItemPreferenceFrameKey: PreferenceKey {
-    static var defaultValue: CGRect = .zero
-    
-    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
-        value = nextValue()
     }
 }
 
 struct PokemonStatsView_Previews: PreviewProvider {
     
+    @State static var selection: PokemonDetailTab = .about
+    
     static var previews: some View {
-        PokemonStatsTabView(selectedTab: .constant(.about))
+        VStack {
+            PokemonStatsTabView(selectedTab: $selection)
+        }
     }
 }

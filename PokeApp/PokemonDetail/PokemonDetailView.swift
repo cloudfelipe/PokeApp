@@ -31,14 +31,15 @@ struct PokemonDetailView: View {
             
             ZStack {
                 VStack(spacing: 10) {
-                    NavigationBar(title: pokemon.name,
+                    NavigationBar(namespace: namespace,
+                                  title: pokemon.name,
                                   subtitle: pokemon.id,
                                   isExpanded: $isExpanded,
                                   backButtonAction: {
                         withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                             isShown.toggle()
                         }
-                    })
+                    }, trailingButtonAction: {})
                     .foregroundColor(.white)
                     subHeaderView
                         .opacity(isExpanded ? 1.0 : 0.0)

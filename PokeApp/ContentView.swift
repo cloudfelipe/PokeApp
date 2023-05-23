@@ -62,10 +62,11 @@ struct ContentView: View {
     }
     
     private var headerView: some View {
-        NavigationBar(title: "Pokedex",
+        NavigationBar(namespace: namespace,
+                      title: "Pokedex",
                       subtitle: "",
                       isExpanded: .constant(!hasScrolled),
-                      backButtonAction: {})
+                      backButtonAction: {}, trailingButtonAction: {})
             .foregroundColor(.black)
             .background(Color.white)
             .frame(maxHeight: .infinity, alignment: .top)

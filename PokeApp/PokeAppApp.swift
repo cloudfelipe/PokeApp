@@ -12,7 +12,7 @@ struct PokeAppApp: App {
     var body: some Scene {
         WindowGroup {
 //            NavigationBar(backButtonAction: {})
-            ContentView()
+            PokedexView()
 //            PokemonBaseStatsView(pokemon: listPokemon["#004"]!)
         }
     }
