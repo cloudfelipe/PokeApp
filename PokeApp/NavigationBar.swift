@@ -74,7 +74,7 @@ struct NavigationBar: View {
             
         }
         .frame(height: 60.0)
-        .foregroundColor(.white)
+//        .foregroundColor(.white)
     }
 }
 

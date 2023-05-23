@@ -10,17 +10,19 @@ import SwiftUI
 struct AnimatedPokeballView: View {
     
     let animationDuration: Double
+    let color: Color
     @State private var pokeballRotationAngle: Double = 0.0
     @State private var animatePokeball = false
     
-    init(animationDuration: Double = 10.0) {
+    init(animationDuration: Double = 10.0, color: Color = .white) {
         self.animationDuration = animationDuration
+        self.color = color
     }
     
     var body: some View {
         Image("pokeball")
             .resizable()
-            .foregroundColor(.white.opacity(0.2))
+            .foregroundColor(color.opacity(0.2))
             .rotationEffect(.degrees(pokeballRotationAngle))
             .animation(.linear(duration: animationDuration)
                 .repeatForever(autoreverses: false),

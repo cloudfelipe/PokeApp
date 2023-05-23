@@ -59,7 +59,7 @@ struct PokemonStatsTabView: View {
                             GeometryReader { proxy in
                                 if selectedTab == tabItem {
                                     RoundedRectangle(cornerRadius: 2)
-                                        .foregroundColor(.purple.opacity(0.7))
+                                        .foregroundColor(Color(hex: "#6b79dc"))
                                         .frame(width: proxy.size.width, height: 4.0)
                                         .frame(maxHeight: .infinity, alignment: .bottom)
                                         .matchedGeometryEffect(id: "tab", in: namespace)
