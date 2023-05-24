@@ -209,18 +209,27 @@ struct FilterStack: View {
     @State private var appears = [false, false, false, false]
     @State private var enableAction = true
     
+    @State private var showSelectGeneration = false
+    
     var body: some View {
         VStack(alignment: .trailing) {
             ForEach(Array(filters.enumerated()), id: \.offset) { index, filter in
                 if appears[index] {
-                    HStack {
-                        Text(filter.title)
-                            .customFont(.subheadline2)
-                            .foregroundColor(.primary)
-                        Image(systemName: filter.imageName)
-                            .customFont(.subheadline2)
-                            .foregroundColor(Color(hex: "#6b79dc"))
-                    }
+                    Button(action: {
+                        withAnimation {
+                            showSelectGeneration.toggle()
+//                            showFilter = false
+                        }
+                    }, label: {
+                        HStack {
+                            Text(filter.title)
+                                .customFont(.subheadline2)
+                                .foregroundColor(.primary)
+                            Image(systemName: filter.imageName)
+                                .customFont(.subheadline2)
+                                .foregroundColor(Color(hex: "#6b79dc"))
+                        }
+                    })
                     .padding(.horizontal, 20)
                     .padding(.vertical, 10)
                     .background(.white)
@@ -248,6 +257,10 @@ struct FilterStack: View {
             } else {
                 fadeOff()
             }
+        }
+        .sheet(isPresented: $showSelectGeneration) {
+            GenerationView(generation: .constant(.I))
+            .presentationDetents([.fraction(0.5), .fraction(0.9)])
         }
     }
     
